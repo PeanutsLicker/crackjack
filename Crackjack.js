@@ -6,9 +6,8 @@ var ySize = 1080 * 0.5;
 var playonce = true;
 var startWalkingSound = true;
 var distx = 0;
-distx
-//setup
-function setup() {
+
+function preload(){
   crackjack = loadGif('characterwalk.gif');
   gopnik = loadGif('enemy1.gif')
   doll = loadGif('enemy2.gif')
@@ -18,6 +17,9 @@ function setup() {
   soundtrack = loadSound('soundtrack.mp3');
   walking = loadSound('footsteps.mp3');
   hit = loadSound('hit.mp3');
+}
+
+function setup() {
   createCanvas(xSize, ySize);
     background(220);
   player = new fish(xSize/4, 0, 0.3, 0, 0, 100, 3);
