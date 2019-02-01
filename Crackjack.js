@@ -7,24 +7,24 @@ var playonce = true;
 var startWalkingSound = true;
 var distx = 0;
 
-function preload(){
-  crackjack = loadGif('characterwalk.gif');
-  gopnik = loadGif('enemy1.gif')
-  doll = loadGif('enemy2.gif')
-  death = loadImage('death.jpeg');
-  background1 = loadImage('background.jpg')
-  deaths = loadSound('death sound.mp3');
-  soundtrack = loadSound('soundtrack.mp3');
-  walking = loadSound('footsteps.mp3');
-  hit = loadSound('hit.mp3');
+function preload() {
+  crackjack = loadGif('resources/characterwalk.gif');
+  gopnik = loadGif('resources/enemy1.gif')
+  doll = loadGif('resources/enemy2.gif')
+  death = loadImage('resources/death.jpeg');
+  background1 = loadImage('resources/background.jpg')
+  deaths = loadSound('resources/death_sound.mp3');
+  soundtrack = loadSound('resources/soundtrack.mp3');
+  walking = loadSound('resources/footsteps.mp3');
+  hit = loadSound('resources/hit.mp3');
 }
 
 function setup() {
   createCanvas(xSize, ySize);
-    background(220);
-  player = new fish(xSize/4, 0, 0.3, 0, 0, 100, 3);
-  enemy = new obstacle(xSize+40, ySize-40, 3, 80, 1);
-  enemy2 = new obstacle(xSize*1.5+40, ySize-40, 3, 80, 2);
+  background(220);
+  player = new fish(xSize / 4, 0, 0.3, 0, 0, 100, 3);
+  enemy = new obstacle(xSize + 40, ySize - 40, 3, 80, 1);
+  enemy2 = new obstacle(xSize * 1.5 + 40, ySize - 40, 3, 80, 2);
   wall = new Background();
   lives = new Textobj("Lives: ", "player.lives", 1);
   distance = new Textobj("Distance walked:", "distx10", 2);
@@ -39,13 +39,13 @@ function fish(_x, _y, _a, _xv, _yv, _size, _lives) {
   this.xv = _xv;
   this.yv = _yv;
   this.size = _size;
-  this.xsize = this.size*1.375 //xsize with the right proportians compared to size
+  this.xsize = this.size * 1.375 //xsize with the right proportians compared to size
   this.dead = false;
   this.stopAtStart = true;
   this.lives = _lives;
   this.ground = 0;
 
-  this.move = function() {
+  this.move = function () {
     //playing soundtrack once
     if (soundtrack.isLoaded() && soundtrack.isPlaying() == false) {
       soundtrack.play();
@@ -55,9 +55,8 @@ function fish(_x, _y, _a, _xv, _yv, _size, _lives) {
     this.y += this.yv;
     //controls
     if (keyIsDown(UP_ARROW) && this.yv == 0) {
-        this.yv = -8;
-    }
-    else {
+      this.yv = -8;
+    } else {
       //gravity
       this.yv += this.a;
     }
@@ -68,8 +67,7 @@ function fish(_x, _y, _a, _xv, _yv, _size, _lives) {
       crackjack.play();
       //acceleration when RIGHT_ARROW is pressed
       this.xv += 1;
-    }
-    else if (this.xv > 0) {
+    } else if (this.xv > 0) {
       //deaccelerate when RIGHT_ARROW is not pressed AND xv is more than 0
       this.xv -= 0.3;
     }
@@ -79,46 +77,44 @@ function fish(_x, _y, _a, _xv, _yv, _size, _lives) {
       //flipping animation and running animation
       this.mirrored = true;
       crackjack.play();
-    }
-    else if (this.xv < 0) {
+    } else if (this.xv < 0) {
       //deacceleration when LEFT_ARROW is not pressed AND xv is less than 0
       this.xv += 0.3
     }
     //speed cap
     if (this.xv > 3) {
       this.xv = 3;
-    }
-    else if (this.xv < -3) {
+    } else if (this.xv < -3) {
       this.xv = -3;
     }
     //failsafe to make sure xv defaults to 0
     if (this.xv > -0.3 && this.xv < 0.3) {
-        this.xv = 0;
+      this.xv = 0;
     }
   }
 
   //collisions with walls and floor.
-  this.collision = function() {
+  this.collision = function () {
     //ground
-    if (this.y > ySize - this.size/2) {
-      this.y = ySize - this.size/2;
+    if (this.y > ySize - this.size / 2) {
+      this.y = ySize - this.size / 2;
       this.yv = 0;
       this.ground += 1;
     }
     //left wall
-    if (this.x+15 < 0 + this.size/2) {
-      this.x = -15 + this.size/2;
+    if (this.x + 15 < 0 + this.size / 2) {
+      this.x = -15 + this.size / 2;
       console.log("left wall");
     }
     //right wall
-    else if (this.x-15 > xSize - this.size/2 - 1) {
-      this.x = xSize - this.size/2 + 14;
+    else if (this.x - 15 > xSize - this.size / 2 - 1) {
+      this.x = xSize - this.size / 2 + 14;
       console.log("right wall");
     }
   }
 
   //drawing the player
-  this.draw = function() {
+  this.draw = function () {
     //final gif version of character
     //mirroring gif when moving left
     if (this.mirrored) {
@@ -127,7 +123,7 @@ function fish(_x, _y, _a, _xv, _yv, _size, _lives) {
       this.x *= -1;
     }
     imageMode(CENTER);
-    image(crackjack, this.x /* * (this.mirrored ? 1 : -1) */, this.y, this.xsize, this.size);
+    image(crackjack, this.x /* * (this.mirrored ? 1 : -1) */ , this.y, this.xsize, this.size);
     if (this.mirrored) {
       pop();
       this.x *= -1;
@@ -147,24 +143,25 @@ function obstacle(xx, yy, xxv, _size, _number) {
   this.number = _number
 
   //enemy moving
-  this.move = function() {
+  this.move = function () {
     //making sure the enemy doesn't move and the walking sound doesn't play untill the player hit the ground
     if (player.ground > 0 && startWalkingSound) {
       walking.play();
       walking.loop();
-      /*this.*/startWalkingSound = false;
+      /*this.*/
+      startWalkingSound = false;
     }
     if (player.ground > 0) {
       this.x -= this.xv;
       if (this.x < -this.size) {
-        this.x = xSize + this.size/2;
+        this.x = xSize + this.size / 2;
         this.hit = false;
       }
     }
   }
   //collision with the player
-  this.collision = function() {
-    if (/* if there are y coordinates of the player within the y coordinates of the enemy */ player.y - player.size/2 <= this.y + this.size/2 && player.y + player.size/2 >= this.y - this.size/2 && /* if there are x coordinates of the player within the x coordinates of the enemy */ player.x+15 - player.size/2 <= this.x + this.size/4 && player.x + player.size/2 >= this.x+15 - this.size/4 && this.hit == false) {
+  this.collision = function () {
+    if ( /* if there are y coordinates of the player within the y coordinates of the enemy */ player.y - player.size / 2 <= this.y + this.size / 2 && player.y + player.size / 2 >= this.y - this.size / 2 && /* if there are x coordinates of the player within the x coordinates of the enemy */ player.x + 15 - player.size / 2 <= this.x + this.size / 4 && player.x + player.size / 2 >= this.x + 15 - this.size / 4 && this.hit == false) {
       player.lives -= 1;
       hit.setVolume(10);
       hit.play();
@@ -177,35 +174,34 @@ function obstacle(xx, yy, xxv, _size, _number) {
   }
 
   //drawing enemy
-  this.draw = function() {
+  this.draw = function () {
     //rectangle placeholder
     if (this.number == 1) {
-      image(gopnik, this.x, this.y, this.size*0.680952381, this.size)
-    }
-    else if (this.number == 2) {
-      image(doll, this.x, this.y, this.size*0.694214876, this.size)
+      image(gopnik, this.x, this.y, this.size * 0.680952381, this.size)
+    } else if (this.number == 2) {
+      image(doll, this.x, this.y, this.size * 0.694214876, this.size)
     }
   }
 }
 
 //scrolling background
 function Background() {
-  this.xPos = xSize/2;
-  this.yPos = ySize/2;
+  this.xPos = xSize / 2;
+  this.yPos = ySize / 2;
   this.image = background1;
   this.scrollSpeed = 1;
   this.imageAmount = ceil(xSize / this.image.width) * 2;
 
-  this.draw = function() {
+  this.draw = function () {
     if (this.image != null) {
       for (i = 0; i < this.imageAmount; i++) {
-        image(this.image, this.xPos + i*this.image.width, this.yPos, this.image.width, this.image.height);
+        image(this.image, this.xPos + i * this.image.width, this.yPos, this.image.width, this.image.height);
       }
     }
   }
-  this.move = function() {
+  this.move = function () {
     this.xPos -= this.scrollSpeed;
-    distx += this.scrollSpeed/10;
+    distx += this.scrollSpeed / 10;
     distx10 = round(distx);
     if (this.xPos <= -this.image.width) {
       this.xPos += this.image.width;
@@ -223,25 +219,30 @@ function Textobj(_text, _textVar, _align) {
 
   if (this.align == 1) {
     this.horizAlign = LEFT;
-  }
-  else if (this.align == 2) {
+  } else if (this.align == 2) {
     this.horizAlign = RIGHT;
     this.xPos = xSize;
   }
   this.vertAlign = TOP;
   this.textSize = 16;
 
-  this.draw = function() {
+  this.draw = function () {
     if (this.showText) {
-      if (_textVar) {this.text = _text.toString() + eval(_textVar);}
+      if (_textVar) {
+        this.text = _text.toString() + eval(_textVar);
+      }
       fill(255);
       textSize(this.textSize);
       textAlign(this.horizAlign, this.vertAlign);
       text(this.text, this.xPos, this.yPos);
     }
   }
-  this.show = function() {this.showText = true}
-  this.hide = function() {this.showText = false}
+  this.show = function () {
+    this.showText = true
+  }
+  this.hide = function () {
+    this.showText = false
+  }
 }
 
 //main loop
@@ -268,7 +269,7 @@ function draw() {
     else {
       background(100);
       imageMode(CENTER);
-      image(death, xSize/2, ySize/2);
+      image(death, xSize / 2, ySize / 2);
       //making sure death sequence only played once
       if (playonce == true) {
         deaths.play();
